@@ -1,14 +1,10 @@
 # Strain and species sharing across varying criteria for transmission
 
-## load packages
-library(readr)
-library(readxl)
-library(tidyverse)
-library(reshape2)
-
 ## load data
+library(readxl)
 fmt<-read_excel("FMT_strain_sharing.xlsx",sheet="FMT_strain_sharing")
 donor_profiles<-read_excel("FMT_donor_profiles.xlsx",sheet="FMT_donor_profiles")
+recipient_profiles<-read_excel("FMT_recipient_profiles.xlsx",sheet="FMT_recipient_profiles")
 
 ## 1. All strain sharing events
 ### calculate shared strains (proportion of species with 99.999% average nucleotide identity per dyad)
