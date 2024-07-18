@@ -1,6 +1,6 @@
 # Strain and species sharing across varying criteria for transmission
 
-## load data
+## load FMT data
 library(readxl)
 fmt<-read_excel("FMT_instrain.xlsx",sheet="FMT_strain_sharing")
 donor_profiles<-read_excel("FMT_donor_profiles.xlsx",sheet="FMT_donor_profiles")
@@ -55,3 +55,26 @@ shared4<-aggregate(list(fmt4$popANI),by=list(fmt4$subject1,fmt4$subject2,fmt4$ty
 colnames(shared4)=c("subject1","subject2","type1","type2","same_triad","shared_strains")
 ### calculate shared species
 shared4$shared_species<-aggregate(list(fmt4$popANI),by=list(fmt4$subject1,fmt4$subject2,fmt4$type1,fmt4$type2,fmt4$same_triad),function(x){length(x)})[,6]
+
+## Comparisons with 0 shared species drop out of these aggregate functions; identify them and add them back (with a value of zero)
+donors<-unique(donor_profiles$donor)
+recipients<-unique(recipient_profiles$recipient)
+for (d in donors){
+  for (r in recipients){
+    if (paste(pair[1],pair[2])%in%c("D33 R9","R9 D3","DT001 R15","R15 DT001","DT001 R16","R16 DT001","DT002 R19","R19 DT002","DT002 R22","R22 DT002","DT019 R17","R17 DT019","DT019 R18","R18 DT019","DONOR3185 pR3_160304", "pR3_160304 DONOR3185")){same_triad="Y"}
+    else{same_triad="N"}
+    if (nrow(shared[(shared$subject1==d & shared$subject2==r & shared$type2=="after") | (shared$subject2==d & shared$subject1==r & shared$type1=="after"),])<1){shared[nrow(shared)+1,]<-c(d,r,"donor","after",same_triad,0,0)}
+    if (nrow(shared2[(shared2$subject1==d & shared2$subject2==r & shared2$type2=="after") | (shared2$subject2==d & shared2$subject1==r & shared2$type1=="after"),])<1){shared2[nrow(shared2)+1,]<-c(d,r,"donor","after",same_triad,0,0)}
+    if (nrow(shared3[(shared3$subject1==d & shared3$subject2==r & shared3$type2=="after") | (shared3$subject2==d & shared3$subject1==r & shared3$type1=="after"),])<1){shared3[nrow(shared3)+1,]<-c(d,r,"donor","after",same_triad,0,0)}
+    if (nrow(shared4[(shared4$subject1==d & shared4$subject2==r & shared4$type2=="after") | (shared4$subject2==d & shared4$subject1==r & shared4$type1=="after"),])<1){shared4[nrow(shared4)+1,]<-c(d,r,"donor","after",same_triad,0,0)}
+  }
+}
+
+
+
+## load Amboseli data
+amboseli<-read_excel("Amboseli_instrain.xlsx",sheet="Amboseli_strain_sharing")
+shared_amboseli<-aggregate(amboseli$popANI,by=list(amboseli$name1,amboseli$date1,amboseli$name2,amboseli$date2,amboseli$category),FUN=function(x){length(x[x>=0.99999])/length(x)})
+colnames(shared_amboseli)=c("name1","date1","name2","date2","category","shared_strains")
+
+
