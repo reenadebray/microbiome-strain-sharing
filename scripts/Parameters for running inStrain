@@ -1,4 +1,4 @@
-# Using inStrain to identify shared strains in FMT dataset
+# Using inStrain to identify shared strains
 
 ## trim reads using Trimmomatic v.0.39
 trimmomatic_cmdline PE $forward $reverse $samp_name.forward_paired.fq.gz $samp_name.forward_unpaired.fq.gz $samp_name.reverse_paired.fq.gz $samp_name.reverse_unpaired.fq.gz SLIDINGWINDOW:4:20 MINLEN:70
