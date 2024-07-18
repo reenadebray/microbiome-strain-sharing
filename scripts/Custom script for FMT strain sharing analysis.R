@@ -2,7 +2,7 @@
 
 ## load data
 library(readxl)
-fmt<-read_excel("FMT_strain_sharing.xlsx",sheet="FMT_strain_sharing")
+fmt<-read_excel("FMT_instrain.xlsx",sheet="FMT_strain_sharing")
 donor_profiles<-read_excel("FMT_donor_profiles.xlsx",sheet="FMT_donor_profiles")
 recipient_profiles<-read_excel("FMT_recipient_profiles.xlsx",sheet="FMT_recipient_profiles")
 
