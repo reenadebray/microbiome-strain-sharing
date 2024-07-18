@@ -1,0 +1,19 @@
+# Using StrainPhlAn to identify shared strains
+
+## trim reads using Trimmomatic v.0.39
+trimmomatic_cmdline PE $forward $reverse $samp_name.forward_paired.fq.gz $samp_name.forward_unpaired.fq.gz $samp_name.reverse_paired.fq.gz $samp_name.reverse_unpaired.fq.gz SLIDINGWINDOW:4:20 MINLEN:70
+
+## profile species using MetaPhlAn v.3.0
+metaphlan $samp_name.forward_paired.fq.gz,$samp_name.reverse_paired.fq.gz --input_type fastq --bowtie2out $samp_name.bt -s $samp_name.sam.bz2 --unclassified_estimation -o $samp_name.profile.txt
+
+## reconstruct species-specific markers using StrainPhlAn v.4.0.6
+sample2markers.py -i *.sam.bz2 -o consensus_markers
+
+## build a database of marker genes for each species using StrainPhlAn v.4.0.6
+extract_markers.py -c $strain -o database_markers
+
+## build a phylogenetic tree for each species using StrainPhlAn v.4.0.6
+strainphlan -s consensus_markers/*.pkl -m database_markers/$strain.fna -o strainphlan -c $strain --mutation_rates --marker_in_n_samples 1 --sample_with_n_markers 10 --phylophlan_mode accurate
+
+## extract pairwise distances from phylogenetic tree using StrainPhlAn v.4.0.6
+tree_pairwisedists.py -n $strain $species.norm.tsv
