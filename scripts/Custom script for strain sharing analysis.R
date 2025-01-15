@@ -44,13 +44,13 @@ shared3$shared_species<-aggregate(list(fmt3$popANI),by=list(fmt3$subject1,fmt3$s
 
 ## 4. Species that were unique to a single recipient after FMT
 ### identify recipient-genome combinations that occur only once
-recipient_profiles$genome_recipient<-paste(recipient_profiles$genome,recipient_profiles$name_R)
+recipient_profiles$genome_recipient<-paste(recipient_profiles$genome,recipient_profiles$recipient)
 recipient_profiles<-recipient_profiles[!duplicated(recipient_profiles$genome_recipient),]
 freq_table<-sort(table(recipient_profiles$genome))
 private_sp4<-names(freq_table[freq_table==1])
 ### include only these species
 fmt4<-fmt3[fmt3$genome%in%private_sp4,]
-### calculate shraed strains
+### calculate shared strains
 shared4<-aggregate(list(fmt4$popANI),by=list(fmt4$subject1,fmt4$subject2,fmt4$type1,fmt4$type2,fmt4$same_triad),function(x){length(x[x>=0.99999])/length(x)})
 colnames(shared4)=c("subject1","subject2","type1","type2","same_triad","shared_strains")
 ### calculate shared species
